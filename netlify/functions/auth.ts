@@ -1,8 +1,16 @@
 import { Handler } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
 
+console.log('SUPABASE_URL:', process.env.SUPABASE_URL);
+console.log('SUPABASE_SERVICE_ROLE_KEY exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
+
 const supabaseUrl = process.env.SUPABASE_URL || '';
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+
+if (!supabaseUrl) {
+  console.error('FATAL: SUPABASE_URL environment variable is not set.');
+  throw new Error('FATAL: SUPABASE_URL environment variable is not set.');
+}
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -28,7 +36,7 @@ export const handler: Handler = async (event) => {
     let result;
 
     switch (action) {
-      case 'signup':
+      case 'signup': {
         // First check if user already exists in users table
         const { data: existingUser } = await supabase
           .from('users')
@@ -93,8 +101,8 @@ export const handler: Handler = async (event) => {
           }
         }
         break;
-
-      case 'signin':
+      }
+      case 'signin': {
         result = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -143,7 +151,7 @@ export const handler: Handler = async (event) => {
           }
         }
         break;
-
+      }
       default:
         return {
           statusCode: 400,
