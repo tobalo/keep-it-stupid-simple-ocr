@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, FileText } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import { useDocumentStore } from '../stores/documentStore';
 import { usePaymentStore } from '../stores/paymentStore';
@@ -16,13 +16,14 @@ const UploadPage = () => {
   const [documentId, setDocumentId] = useState<string | null>(null);
   
   useEffect(() => {
-    // Check for document ID in location state (from homepage upload)
-    const stateDocId = (location.state as { documentId?: string })?.documentId;
-    if (stateDocId) {
-      setDocumentId(stateDocId);
-      fetchDocument(stateDocId);
+    // Get documentId from URL query parameter
+    const params = new URLSearchParams(location.search);
+    const docId = params.get('documentId');
+    if (docId) {
+      setDocumentId(docId);
+      fetchDocument(docId);
     }
-  }, [location.state, fetchDocument]);
+  }, [location.search, fetchDocument]);
   
   // Fetch credit balance on page load
   useEffect(() => {
@@ -34,6 +35,8 @@ const UploadPage = () => {
   const handleUploadSuccess = (docId: string) => {
     setDocumentId(docId);
     fetchDocument(docId);
+    // Update URL with new documentId
+    navigate(`/upload?documentId=${docId}`, { replace: true });
   };
   
   return (
@@ -114,6 +117,7 @@ const UploadPage = () => {
             <button
               onClick={() => {
                 setDocumentId(null);
+                navigate('/upload', { replace: true });
               }}
               className="btn-secondary mr-4"
             >

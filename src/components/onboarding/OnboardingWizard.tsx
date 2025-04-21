@@ -46,7 +46,7 @@ const OnboardingWizard = () => {
       setCurrentStep(currentStep + 1);
     } else {
       completeOnboarding();
-      navigate('/dashboard');
+      navigate('/dashboard'); // Changed from /upload to /dashboard
     }
   };
   
@@ -179,7 +179,7 @@ const OnboardingWizard = () => {
               You're All Set!
             </h3>
             <p className="mt-2 text-gray-600">
-              Your account is ready to use. You have 10 free credits to get started.
+              Your account is ready to use. You have 2 free credits to get started.
             </p>
           </div>
         );

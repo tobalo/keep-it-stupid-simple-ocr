@@ -65,7 +65,8 @@ const HomePage = () => {
       if (document?.id) {
         toast.dismiss(loadingToast);
         toast.success('Document uploaded successfully!');
-        navigate('/upload', { state: { documentId: document.id } });
+        // Changed to use query parameter instead of state
+        navigate(`/upload?documentId=${document.id}`);
       } else {
         throw new Error('Failed to create document record');
       }
